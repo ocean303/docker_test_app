@@ -1,70 +1,154 @@
-# Getting Started with Create React App
+# 🔍 Debounced Search Hook Tester
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern React application demonstrating a custom debounced search hook with real-time recipe search functionality. Features a sleek dark theme UI and optimized search performance.
 
-## Available Scripts
+![React](https://img.shields.io/badge/React-18.3.1-blue?logo=react)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)
+![AWS](https://img.shields.io/badge/AWS-EC2%20Deployable-orange?logo=amazon-aws)
 
-In the project directory, you can run:
 
-### `npm start`
+## 📁 Project Structure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+debounced-search-app/
+├── src/
+│   ├── components/
+│   │   ├── SearchComponent.js    # Main search component
+│   │   ├── useDebounce.js       # Custom debounce hook
+│   │   └── styles.css           # Component styles
+│   ├── App.js                   # Main app component
+│   ├── App.css                  # Global app styles
+│   └── index.js                 # Entry point
+├── public/
+├── Dockerfile                   # Docker configuration
+├── package.json                 # Dependencies and scripts
+└── README.md                    # This file
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🚀 Local Development Setup
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (v16 or higher)
+- npm or yarn
+- Git
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/ocean303/docker_test_app.git
+   cd docker_test_app
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **Start development server**
+   ```bash
+   npm start
+   ```
 
-### `npm run eject`
+4. **Open in browser**
+   ```
+   http://localhost:3000
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🐳 Docker Setup
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Build and Run with Docker
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. **Build Docker image**
+   ```bash
+   docker build -t docker_test_app .
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+2. **Run container**
+   ```bash
+   docker run -d -p 3000:3000 --name docker-app docker_test_app
+   ```
 
-## Learn More
+3. **Access application**
+   ```
+   http://localhost:3000
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Docker Commands Reference
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+# Stop container
+docker stop docker-app
 
-### Code Splitting
+# Remove container
+docker rm docker-app
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# View running containers
+docker ps
 
-### Analyzing the Bundle Size
+# View logs
+docker logs docker-app
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# Remove image
+docker rmi docker-app
+```
 
-### Making a Progressive Web App
+## ☁️ AWS EC2 Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Step-by-Step Deployment Guide
 
-### Advanced Configuration
+1. **Create EC2 Instance**
+   - Launch `t2.micro` instance with Amazon Linux 2023
+   - Create security group allowing HTTP (80), HTTPS (443), SSH (22), and port 3000
+   - Download and securely store the key pair file
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+2. **Connect to EC2**
+   ```bash
+   # Make key secure
+   chmod 400 your-key.pem
+   
+   # Connect via SSH
+   ssh -i your-key.pem ec2-user@YOUR_EC2_IP
+   ```
 
-### Deployment
+3. **Install Docker on EC2**
+   ```bash
+   # Update system
+   sudo yum update -y
+   
+   # Install Docker
+   sudo yum install docker -y
+   
+   # Start Docker
+   sudo systemctl start docker
+   sudo systemctl enable docker
+   
+   # Add user to docker group
+   sudo usermod -a -G docker ec2-user
+   
+   # Logout and login again
+   exit
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+4. **Deploy Application**
+   ```bash
+   # Install Git
+   sudo yum install git -y
+   
+   # Clone repository
+   git clone https://github.com/ocean303/docker_test_app.git
+   cd docker_test_app
+   
+   # Build and run
+   docker build -t docker_test_app .
+   docker run -d -p 3000:3000 --name docker-app docker_test_app
+   ```
 
-### `npm run build` fails to minify
+5. **Configure Security Group**
+   - Add inbound rule for port 3000 (Custom TCP, Source: 0.0.0.0/0)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+6. **Access Your App**
+   ```
+   http://YOUR_EC2_IP:3000
+   ```
